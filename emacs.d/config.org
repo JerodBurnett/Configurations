@@ -1,0 +1,624 @@
+#+STARTUP: overview 
+* Defaults
+** UI
+#+BEGIN_SRC emacs-lisp
+  (setq inhibit-startup-message t)
+  (setq initial-scratch-message "")
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (blink-cursor-mode -1)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (global-visual-line-mode t) 
+  
+  (show-paren-mode t) 
+  (setq show-paren-style 'expression)
+  
+ (when window-system (global-prettify-symbols-mode 1))
+  (setq sentence-end-double-space nil)
+
+  ;; no beep
+  (setq visible-bell t)
+
+  (column-number-mode t) 
+#+END_SRC
+** UTF-8
+#+BEGIN_SRC emacs-lisp
+  ;; utf-8
+  (setq locale-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
+
+#+END_SRC
+** Tabs
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+  (setq-default indicate-empty-lines t)
+#+END_SRC
+** Whitespace mode
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace
+    :bind ("s-<f10>" . whitespace-mode))
+#+END_SRC
+** global highlightline mode
+#+BEGIN_SRC emacs-lisp
+(when window-system (global-hl-line-mode t))
+#+END_SRC
+** Time
+#+BEGIN_SRC emacs-lisp
+(setq display-time-24hr-format nil)
+(setq display-time-format "%H:%M - %d %B %Y")
+
+(display-time-mode t)
+#+END_SRC
+* Fonts
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist 
+             '(font . "Misc Termsyn 12"))
+#+END_SRC
+* Themes
+** Atom themes
+#+BEGIN_SRC emacs-lisp
+(use-package atom-dark-theme
+   :defer t)
+
+(use-package atom-one-dark-theme
+   :defer t)
+#+END_SRC
+** Base16-themes
+#+BEGIN_SRC emacs-lisp
+    (use-package base16-theme
+                 :defer t)
+#+END_SRC
+** Cyberpunk-theme
+#+BEGIN_SRC emacs-lisp
+    (use-package cyberpunk-theme
+                 :defer t)
+#+END_SRC
+** Moe-theme 
+#+BEGIN_SRC emacs-lisp
+  (use-package moe-theme
+    :defer t) 
+#+END_SRC
+** Spacemacs-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package spacemacs-theme
+       :defer t )
+#+END_SRC
+** Zerodark-theme
+#+BEGIN_SRC emacs-lisp
+    (use-package zerodark-theme
+      :defer t)
+  ;    (load-theme 'zerodark t)
+  ;    (zerodark-setup-modeline-format)
+#+END_SRC
+** Goose-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package goose-theme
+    :defer t) 
+#+END_SRC
+** Load-theme 
+#+BEGIN_SRC emacs-lisp
+  ; (load-theme 'moe-light t)
+  (load-theme 'atom-one-dark t)
+#+END_SRC
+** Set background
+#+BEGIN_SRC emacs-lisp
+; (set-background-color "#151515")
+#+END_SRC
+** Smart-line-mode
+#+BEGIN_SRC emacs-lisp
+      (use-package smart-mode-line
+        :ensure t
+        :config
+        (progn
+          (setq sml/theme 'respectful)
+      ;    (setq sml/theme 'dark)    
+  ;        (setq sml/setup)
+           (setq sml/no-confirm-load-theme t)
+  ;         (setq sml/theme 'light)
+           (sml/setup)
+      ;    (setq sml/name-width 40)
+      ;    (setq sml/mode-width 'full)
+      ;    (set-face-attribute 'mode-line nil
+      ;                        :box nil)
+          ))
+      ;    (sml/setup)
+#+END_SRC
+** Powerline
+#+BEGIN_SRC emacs-lisp
+  ;; (use-package powerline
+  ;; :ensure t
+  ;; :config
+  ;; (powerline-moe-theme)
+  ;; )
+
+#+END_SRC
+** theme modelines
+#+BEGIN_SRC emacs-lisp
+;  (moe-theme-set-color 'cyan)
+    ;; (Available colors: blue, orange, green ,magenta, yellow, purple, red, cyan, w/b.)
+#+END_SRC
+** Shamelessly stolen function
+#+BEGIN_SRC emacs-lisp
+    (defun switch-theme (theme)
+      "Disables any currently active themes and loads THEME."
+      ;;interactive call taken from load-theme
+      (interactive
+       (list
+        (intern (completing-read "Load custom theme: "
+                                 (mapc 'symbol-name
+                                       (custom-available-themes))))))
+      (let ((enabled-themes custom-enabled-themes))
+        (mapc #'disable-theme custom-enabled-themes)
+        (load-theme theme t)))
+
+    (defun disable-active-themes ()
+      "Disables any currently active themes listed in 'custom-enabled'themes'."
+      (interactive)
+      (mapc #'disable-theme custom-enabled-themes))
+
+  ;  (global-set-key (kbd "\C-<f12>") 'switch-theme)
+  ;  (global-set-key (kbd "\C-<f11>") 'disable-active-themes)
+#+END_SRC
+* Custom Keybindings
+#+BEGIN_SRC emacs-lisp
+  ;; revert buffer
+  (global-set-key (kbd "<f5>") 'revert-buffer)
+  ;; go to previous buffer 
+  (global-set-key (kbd "<f6>") 'previous-buffer)
+  ;; go to this file
+  (global-set-key (kbd "\e\ec")
+                  (lambda () (interactive) (find-file "~/.emacs.d/config.org")))
+
+  ;;go to the main organization file 
+  (global-set-key (kbd "\e\eo")
+                  (lambda () (interactive) (find-file "~/.emacs.d/organization.org")))
+
+
+  ;; Help keybinding
+;  (bind-key"C-z" 'help-command)
+#+END_SRC
+* Custom Functions
+** Emacs Novel reading mode
+#+BEGIN_SRC emacs-lisp
+  (defun aitbg-toggle-read-novel-mode ()
+    "Setup current buffer to be suitable for reading long novel/article text.
+
+  • Line wrap at word boundaries.
+  • Set a right margin.
+  • line spacing is increased.
+  • variable width font is used.
+
+  Call again to toggle back.
+  URL `http://ergoemacs.org/emacs/emacs_novel_reading_mode.html'
+  Version 2017-02-27"
+    (interactive)
+    (if (null (get this-command 'state-on-p))
+        (progn
+          (set-window-margins nil 0 9)
+          (variable-pitch-mode 1)
+          (setq line-spacing 0.4)
+          (setq word-wrap t)
+          (put this-command 'state-on-p t))
+      (progn
+        (set-window-margins nil 0 0)
+        (variable-pitch-mode 0)
+        (setq line-spacing nil)
+        (setq word-wrap nil)
+        (put this-command 'state-on-p nil)))
+    (redraw-frame (selected-frame)))
+#+END_SRC
+* Which-key: show options
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+               :ensure t
+               :config (which-key-mode))
+#+END_SRC
+* Console/swiper/ivy
+#+BEGIN_SRC emacs-lisp
+    (use-package counsel
+      :ensure t
+      :bind
+      (
+  ;     ("C-z f" . counsel-describe-function)
+  ;     ("C-c k" . counsel-ag)
+       ("M-y" . counsel-yank-pop)
+       :map ivy-minibuffer-map
+       ("M-y" . ivy-next-line)))
+
+    (use-package ivy
+      :ensure t
+      :diminish (ivy-mode)
+      :bind (("C-x b" . ivy-switch-buffer))
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy))
+
+    (use-package swiper
+      :ensure t
+      :bind (("C-s" . swiper)
+             ("C-r" . swiper)
+             ("C-c C-r" . ivy-resume)
+             ("M-x" . counsel-M-x)
+             ("C-x C-f" . counsel-find-file))
+      :config
+      (progn
+        (ivy-mode 1)
+        (setq ivy-use-virtual-buffers t)
+        (setq ivy-display-style 'fancy)
+        (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+        ))
+#+END_SRC
+* Avy
+#+BEGIN_SRC emacs-lisp
+  (use-package avy
+    :ensure t
+    :bind
+      ("M-s" . avy-goto-char))
+#+END_SRC
+* Dashboard
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title "Welcome To Emacs!"))
+#+END_SRC
+* Windows and movement etc
+** Winner mode undo/redo changes to windows
+#+BEGIN_SRC emacs-lisp
+  (use-package winner
+    :config
+    (winner-mode t))
+;    :bind(("M-s-<left>" . winnder-undo)
+;          ("M-s-<right>" . winner-redo)))
+#+END_SRC
+** Ace Windows jump around frames
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :init
+    (progn
+      (setq aw-scope 'frame)
+      (global-set-key (kbd "C-x O") 'other-frame)
+      (global-set-key [remap other-window] 'ace-window)
+      (custom-set-faces
+       '(aw-leading-char-face
+         ((t (:inherit ace-jump-face-foreground :height 2.5)))))))
+#+END_SRC
+* Buffers
+#+BEGIN_SRC emacs-lisp
+  (defalias 'list-buffers 'ibuffer)
+#+END_SRC
+* Org-mode
+** Latest of org-mode
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+#+END_SRC
+** org-plus-contrib
+#+BEGIN_SRC emacs-lisp
+(use-package org
+   :ensure org-plus-contrib)
+#+END_SRC
+** Org-bullets
+#+BEGIN_SRC emacs-lisp
+  ;;pretty
+
+  (use-package org-bullets
+               :ensure t
+               :config
+               (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+** html syntax highlighting export for code
+#+BEGIN_SRC emacs-lisp
+  (use-package htmlize
+    :ensure t)
+#+END_SRC
+* LaTex / Markdown / Pandoc / etc
+** Other
+#+BEGIN_SRC emacs-lisp
+  (use-package tex
+    :ensure auctex)
+
+  (use-package markdown-mode
+    :ensure t
+    :commands (markdown-mode gfm-mode)
+    :mode (("README\\.md\\'" . gfm-mode)
+             ("\\.md\\'" . markdown-mode)
+             ("\\.markdown\\'" . markdown-mode))
+    :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+** Pandoc Exporter
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-pandoc
+;    :no-require t
+;    :defer 10
+    :ensure t)
+#+END_SRC
+* Small packages
+** Expand Marked region
+#+BEGIN_SRC emacs-lisp
+  (use-package expand-region
+               :ensure t
+               :config
+               (global-set-key (kbd "C-=") 'er/expand-region))
+#+END_SRC
+** Hungry-delete
+#+BEGIN_SRC emacs-lisp
+  (use-package hungry-delete
+               :ensure t
+               :config
+               (global-hungry-delete-mode))
+#+END_SRC
+** Smooth Scrolling
+#+BEGIN_SRC emacs-lisp
+(use-package smooth-scrolling
+   :ensure t)
+#+END_SRC
+** Undo tree 
+#+BEGIN_SRC emacs-lisp
+(use-package undo-tree 
+  :ensure t
+  :init 
+  (global-undo-tree-mode)
+  (global-set-key (kbd "M-/") 'undo-tree-visualize))
+#+END_SRC
+** rainbow-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-mode
+    :ensure t
+    :init
+      (rainbow-mode 1))
+#+END_SRC
+** pop-up kill ring
+#+BEGIN_SRC emacs-lisp
+  (use-package popup-kill-ring
+    :ensure t
+    :bind ("\e\ey" . Popup-Kill-ring))
+#+END_SRC
+** sudo-edit
+#+BEGIN_SRC emacs-lisp
+  (use-package sudo-edit
+    :ensure t)
+#+END_SRC
+* TODO Dired
+* Auto-complete
+** Company
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :bind (:map company-active-map
+                ("C-n" . company-select-next)
+                ("C-p" . company-select-previous)
+                ("SPC" . company-abort)
+                )
+    :init
+    (global-company-mode t)
+    :config (add-hook 'prog-mode-hook 'company-mode)
+    (setq company-idle-delay 0.4) ;;delay until complete
+    (setq company-selection-wrap-around t)) ;; Just continue moving
+#+END_SRC
+* TODO Spell Check
+* Flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck
+               :ensure t
+               :init
+               (global-flycheck-mode t))
+#+END_SRC
+* Refactoring
+** Iedit (C-;)
+#+BEGIN_SRC emacs-lisp
+  (use-package iedit
+    :ensure t)
+#+END_SRC
+* Yasnippet (quick bits of code)
+#+BEGIN_SRC emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :init
+    (yas-global-mode 1))
+;    :config
+;    (yas-reload-all))
+
+  ;; yasnippet-snippets ..mine didn't come with any?
+
+  (use-package yasnippet-snippets
+    :ensure t)
+
+#+END_SRC
+* C and C++
+#+BEGIN_SRC emacs-lisp
+  ;; Available C style:
+  ;; “gnu”: The default style for GNU projects
+  ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+  ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+  ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+  ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+  ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+  ;; “linux”: What the Linux developers use for kernel development
+  ;; “python”: What Python developers use for extension modules
+  ;; “java”: The default style for java-mode (see below)
+  ;; “user”: When you want to define your own style
+  (setq
+   c-default-style "bsd" 
+   )
+
+  ;;Makes flycheck use c++11 as standard
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+#+END_SRC
+* NeoTree (similar to nerd tree)
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+   :ensure t
+   :init
+   (progn
+   (global-set-key [f8] 'neotree-toggle)))
+  ; n, p -> next or previous
+  ; spc, ret, tab: open file or fold/unfold directory
+  ; g -> refresh
+  ; A -> maximize or minimize neotree window 
+  ; H -> toggle display hidden files
+  ; C-c C-n -> create file or directory
+  ; C-c C-d -> Delete
+  ; C-c C-r -> rename
+  ; C-c C-c -> Change the root directory
+#+END_SRC
+* Magit 
+#+BEGIN_SRC emacs-lisp
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-push-always-verify nil)
+  (setq git-commit-summary-max-length 50)
+  :bind
+    ("M-g" . magit-status))
+#+END_SRC
+* Misc
+#+BEGIN_SRC emacs-lisp
+(use-package ag
+:ensure t)
+#+END_SRC
+* Projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure t
+    :init
+      (projectile-mode 1))
+#+END_SRC
+* Web Development
+** web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :mode (("\\.erb\\'" . web-mode)
+           ("\\.mustache\\'" . web-mode)
+           ("\\.html?\\'" . web-mode)
+           ("\\.php\\'" . web-mode))
+    :config (progn
+              (setq web-mode-markup-indent-offset 2
+                    web-mode-css-indent-offset 2
+                    web-mode-code-indent-offset 2)))
+#+END_SRC
+** Javascript 
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+
+
+  (use-package js2-refactor
+    :ensure t
+    :after js2-mode
+  ;;  :after hydra
+    :config
+
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (js2r-add-keybindings-with-prefix "C-c C-r")
+    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+    ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+    ;; unbind it.
+    (define-key js-mode-map (kbd "M-.") nil))
+
+
+
+  ;;unsure
+  (use-package js-auto-beautify
+    :ensure t)
+
+  (use-package js-import
+    :ensure t)
+#+END_SRC
+** Tern 
+#+BEGIN_SRC emacs-lisp
+  ;; Good for auto completion, works with javascript 
+      (use-package tern
+         :ensure t
+         :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+         )
+         ;; :config
+         ;;   (use-package company-tern
+         ;;      :ensure t
+         ;;      :init (add-to-list 'company-backends 'company-tern)))
+
+    ;; The following additional keys are bound:
+
+    ;; M-.
+    ;;     Jump to the definition of the thing under the cursor.
+    ;; M-,
+    ;;     Brings you back to last place you were when you pressed M-..
+    ;; C-c C-r
+    ;;     Rename the variable under the cursor.
+    ;; C-c C-c
+    ;;     Find the type of the thing under the cursor.
+    ;; C-c C-d
+    ;;     Find docs of the thing under the cursor. Press again to open the associated URL (if any). 
+
+  (use-package company-tern
+    :ensure t
+    :after company
+    :after tern
+    :after xref-js2
+    :config
+    (add-to-list 'company-backends 'company-tern)
+    (add-hook 'js2-mode-hook (lambda ()
+                               (tern-mode)
+                               (company-mode)))
+    ;; Disable completion keybindings, as we use xref-js2 instead
+    (define-key tern-mode-keymap (kbd "M-.") nil)
+    (define-key tern-mode-keymap (kbd "M-,") nil)
+
+    (setq company-tern-property-marker " <p>"
+          company-tern-property-marker nil
+          company-tern-meta-as-single-line t
+          company-tooltip-align-annotations t))
+
+#+END_SRC
+** Coffee
+#+BEGIN_SRC emacs-lisp
+(use-package coffee-mode
+   :ensure t
+   :init
+   (setq-default coffee-tab-width 2))
+#+END_SRC
+* Linkdn
+* IRC 
+** ERC
+#+BEGIN_SRC emacs-lisp
+  (setq erc-nick "aitbg")
+  (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
+
+  (setq erc-server-history-list '("irc.freenode.net"
+                                  "localhost"))
+
+
+#+END_SRC
+** nick highlighting
+#+BEGIN_SRC emacs-lisp
+(use-package erc-hl-nicks
+  :ensure t
+  :config
+    (erc-update-modules))
+#+END_SRC
+* Diminish mode
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish
+    :ensure t
+    :init
+    (diminish 'which-key-mode)
+    (diminish 'hungry-delete-mode)
+  ;  (diminish 'beacon-mode)
+  
+    (diminish 'rainbow-mode))
+#+END_SRC
+
