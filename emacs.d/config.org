@@ -35,6 +35,8 @@
 #+BEGIN_SRC emacs-lisp
   (setq-default indent-tabs-mode nil)
   (setq-default indicate-empty-lines t)
+  (setq-default tab-width 4) 
+  (setq-default tab-always-indent t)
 #+END_SRC
 ** Whitespace mode
 #+BEGIN_SRC emacs-lisp
@@ -51,6 +53,11 @@
 (setq display-time-format "%H:%M - %d %B %Y")
 
 (display-time-mode t)
+#+END_SRC
+** Parens etc
+#+BEGIN_SRC emacs-lisp
+;;matching pairs, always
+(electric-pair-mode 1)
 #+END_SRC
 * Fonts
 #+BEGIN_SRC emacs-lisp
@@ -452,13 +459,72 @@
   ;;Makes flycheck use c++11 as standard
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
 #+END_SRC
+* Python
+#+BEGIN_SRC emacs-lisp
+  (use-package anaconda-mode
+    :ensure t
+    :commands anaconda-mode
+    :diminish anaconda-mode
+    :init
+    (progn
+      (add-hook 'python-mode-hook 'anaconda-mode)
+      (add-hook 'python-mode-hook 'eldoc-mode)))
+
+  (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends 'company-anaconda))
+
+  (use-package py-autopep8
+    :ensure t
+    :commands (py-autopep8-enable-on-save py-autopep8-buffer)
+    :init
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+#+END_SRC
+* Treemacs
+#+BEGIN_SRC emacs-lisp
+  (use-package treemacs
+      :ensure t
+      :defer t
+      :config
+      (progn
+
+        (setq treemacs-follow-after-init          t
+              treemacs-width                      35
+              treemacs-indentation                2
+              treemacs-git-integration            t
+              treemacs-collapse-dirs              3
+              treemacs-silent-refresh             nil
+              treemacs-change-root-without-asking nil
+              treemacs-sorting                    'alphabetic-desc
+              treemacs-show-hidden-files          t
+              treemacs-never-persist              nil
+              treemacs-is-never-other-window      nil
+              treemacs-goto-tag-strategy          'refetch-index)
+
+        (treemacs-follow-mode t)
+        (treemacs-filewatch-mode t))
+      :bind
+      (:map global-map
+            ([f8]        . treemacs-toggle)
+            ([f9]        . treemacs-projectile-toggle)
+            ("<C-M-tab>" . treemacs-toggle)
+            ("M-0"       . treemacs-select-window)
+            ("C-c 1"     . treemacs-delete-other-windows)
+          ))
+    (use-package treemacs-projectile
+      :defer t
+      :ensure t
+      :config
+      (setq treemacs-header-function #'treemacs-projectile-create-header)
+  )
+#+END_SRC
 * NeoTree (similar to nerd tree)
 #+BEGIN_SRC emacs-lisp
-  (use-package neotree
-   :ensure t
-   :init
-   (progn
-   (global-set-key [f8] 'neotree-toggle)))
+;  (use-package neotree
+;   :ensure t
+;   :init
+;   (progn
+;   (global-set-key [f8] 'neotree-toggle)))
   ; n, p -> next or previous
   ; spc, ret, tab: open file or fold/unfold directory
   ; g -> refresh
@@ -621,4 +687,5 @@
   
     (diminish 'rainbow-mode))
 #+END_SRC
+
 
