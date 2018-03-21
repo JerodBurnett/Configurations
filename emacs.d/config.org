@@ -12,14 +12,14 @@
   (global-visual-line-mode t) 
   
   (show-paren-mode t) 
-  (setq show-paren-style 'expression)
+  ;(setq show-paren-style 'expression)
   
  (when window-system (global-prettify-symbols-mode 1))
   (setq sentence-end-double-space nil)
 
   ;; no beep
-  (setq visible-bell t)
-
+;  (setq visible-bell t)
+(setq ring-bell-function 'ignore)
   (column-number-mode t) 
 #+END_SRC
 ** UTF-8
@@ -57,7 +57,17 @@
 ** Parens etc
 #+BEGIN_SRC emacs-lisp
 ;;matching pairs, always
-(electric-pair-mode 1)
+(electric-pair-mode 1) 
+#+END_SRC
+** Backups
+#+BEGIN_SRC emacs-lisp
+    (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+      backup-by-copying t    ; Don't delink hardlinks
+      version-control t      ; Use version numbers on backups
+      delete-old-versions t  ; Automatically delete excess backups
+      kept-new-versions 20   ; how many of the newest versions to keep
+      kept-old-versions 5    ; and how many of the old
+      )
 #+END_SRC
 * Fonts
 #+BEGIN_SRC emacs-lisp
@@ -77,6 +87,11 @@
 #+BEGIN_SRC emacs-lisp
     (use-package base16-theme
                  :defer t)
+#+END_SRC
+** Cherry Blossom theme
+#+BEGIN_SRC emacs-lisp
+(use-package cherry-blossom-theme
+   :defer t)
 #+END_SRC
 ** Cyberpunk-theme
 #+BEGIN_SRC emacs-lisp
@@ -172,7 +187,7 @@
 * Custom Keybindings
 #+BEGIN_SRC emacs-lisp
   ;; revert buffer
-  (global-set-key (kbd "<f5>") 'revert-buffer)
+  (global-set-key (kbd "<f7>") 'revert-buffer)
   ;; go to previous buffer 
   (global-set-key (kbd "<f6>") 'previous-buffer)
   ;; go to this file
@@ -337,8 +352,8 @@
     :commands (markdown-mode gfm-mode)
     :mode (("README\\.md\\'" . gfm-mode)
              ("\\.md\\'" . markdown-mode)
-             ("\\.markdown\\'" . markdown-mode))
-    :init (setq markdown-command "multimarkdown"))
+             ("\\.markdown\\'" . markdown-mode)))
+;    :init (setq markdown-command "multimarkdown"))
 #+END_SRC
 ** Pandoc Exporter
 #+BEGIN_SRC emacs-lisp
@@ -365,6 +380,7 @@
 ** Smooth Scrolling
 #+BEGIN_SRC emacs-lisp
 (use-package smooth-scrolling
+   :disabled
    :ensure t)
 #+END_SRC
 ** Undo tree 
@@ -380,7 +396,7 @@
   (use-package rainbow-mode
     :ensure t
     :init
-      (rainbow-mode 1))
+    (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 ** pop-up kill ring
 #+BEGIN_SRC emacs-lisp
@@ -393,7 +409,6 @@
   (use-package sudo-edit
     :ensure t)
 #+END_SRC
-* TODO Dired
 * Auto-complete
 ** Company
 #+BEGIN_SRC emacs-lisp
@@ -410,7 +425,6 @@
     (setq company-idle-delay 0.4) ;;delay until complete
     (setq company-selection-wrap-around t)) ;; Just continue moving
 #+END_SRC
-* TODO Spell Check
 * Flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
@@ -441,23 +455,50 @@
 #+END_SRC
 * C and C++
 #+BEGIN_SRC emacs-lisp
-  ;; Available C style:
-  ;; “gnu”: The default style for GNU projects
-  ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
-  ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
-  ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-  ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
-  ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
-  ;; “linux”: What the Linux developers use for kernel development
-  ;; “python”: What Python developers use for extension modules
-  ;; “java”: The default style for java-mode (see below)
-  ;; “user”: When you want to define your own style
-  (setq
-   c-default-style "bsd" 
-   )
+     ;; Available C style:
+     ;; “gnu”: The default style for GNU projects
+     ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+     ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+     ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+     ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+     ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+     ;; “linux”: What the Linux developers use for kernel development
+     ;; “python”: What Python developers use for extension modules
+     ;; “java”: The default style for java-mode (see below)
+     ;; “user”: When you want to define your own style
+    (setq
+     c-default-style "ellemtel" 
+     )
 
-  ;;Makes flycheck use c++11 as standard
-  (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++11")))
+     ;;Makes flycheck use c++11 as standard
+
+   (use-package flycheck-clang-analyzer
+     :ensure t
+     :config
+     (with-eval-after-load 'flycheck
+       (require 'flycheck-clang-analyzer)
+        (flycheck-clang-analyzer-setup)))
+
+   (use-package company-c-headers
+     :ensure t
+     :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-c-headers))
+
+   (use-package company-irony
+     :ensure t
+     :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-irony))
+
+   (use-package irony
+    :ensure t
+    :config
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
 #+END_SRC
 * Python
 #+BEGIN_SRC emacs-lisp
@@ -468,7 +509,7 @@
     :init
     (progn
       (add-hook 'python-mode-hook 'anaconda-mode)
-      (add-hook 'python-mode-hook 'eldoc-mode)))
+      (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
 
   (use-package company-anaconda
     :ensure t
@@ -518,23 +559,6 @@
       (setq treemacs-header-function #'treemacs-projectile-create-header)
   )
 #+END_SRC
-* NeoTree (similar to nerd tree)
-#+BEGIN_SRC emacs-lisp
-;  (use-package neotree
-;   :ensure t
-;   :init
-;   (progn
-;   (global-set-key [f8] 'neotree-toggle)))
-  ; n, p -> next or previous
-  ; spc, ret, tab: open file or fold/unfold directory
-  ; g -> refresh
-  ; A -> maximize or minimize neotree window 
-  ; H -> toggle display hidden files
-  ; C-c C-n -> create file or directory
-  ; C-c C-d -> Delete
-  ; C-c C-r -> rename
-  ; C-c C-c -> Change the root directory
-#+END_SRC
 * Magit 
 #+BEGIN_SRC emacs-lisp
 (use-package magit
@@ -556,6 +580,10 @@
     :ensure t
     :init
       (projectile-mode 1))
+
+  (setq projectile-completion-system 'ivy)
+
+(global-set-key (kbd "<f5>") 'projectile-compile-project)
 #+END_SRC
 * Web Development
 ** web-mode
@@ -655,27 +683,6 @@
    :init
    (setq-default coffee-tab-width 2))
 #+END_SRC
-* Linkdn
-* IRC 
-** ERC
-#+BEGIN_SRC emacs-lisp
-  (setq erc-nick "aitbg")
-  (setq erc-prompt (lambda () (concat "[" (buffer-name) "]")))
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
-
-  (setq erc-server-history-list '("irc.freenode.net"
-                                  "localhost"))
-
-
-#+END_SRC
-** nick highlighting
-#+BEGIN_SRC emacs-lisp
-(use-package erc-hl-nicks
-  :ensure t
-  :config
-    (erc-update-modules))
-#+END_SRC
 * Diminish mode
 #+BEGIN_SRC emacs-lisp
   (use-package diminish
@@ -687,5 +694,16 @@
   
     (diminish 'rainbow-mode))
 #+END_SRC
-
-
+* Smart Parens 
+#+BEGIN_SRC emacs-lisp
+  (use-package smartparens
+      :ensure t
+      :diminish smartparens-mode
+      :config
+      (add-hook 'prog-mode-hook 'smartparens-mode))
+#+END_SRC
+* Aggressive Indent
+#+BEGIN_SRC emacs-lisp
+    (use-package aggressive-indent
+        :ensure t)
+#+END_SRC
