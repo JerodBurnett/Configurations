@@ -7,7 +7,7 @@
 ;
 ;=====================================================
 
-; [colors]
+w; [colors]
 ; background = #151515
 ; background-alt = #444
 ; foreground = #7ea2b4
@@ -96,13 +96,13 @@ fixed-center = true
 
 	font-N = <fontconfig pattern>;<vertical offset>
 	font-0 = WunconSiji:size                        = 4;2
-	font-1 = Misc Termsyn:pixelsize                  = 10;2
-	font-2 = Misc Termsyn:pixelsize                  = 10;2
+	font-1 = Misc Termsyn:pixelsize                  = 8;2
+	font-2 = Misc Termsyn:pixelsize                  = 8;2
 
 modules-left = bspwm mpd
 modules-center = 
-modules-right = essid temperature xbacklight battery volume date
-
+;;modules-right = essid temperature xbacklight battery volume date
+modules-right = essid xbacklight battery volume date
 ;; memory cpu .. 
 tray-position = right
 tray-padding = 0
@@ -299,8 +299,7 @@ label = %percentage_used%%
 
 [module/network]
 type = internal/network
-;interface = wlp3s0
-interface = wlan0
+interface = wlp3s0
 interval = 3.0
 
 ; [module/eth]
