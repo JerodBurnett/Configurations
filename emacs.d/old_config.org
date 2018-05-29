@@ -53,7 +53,7 @@
 #+END_SRC
 ** global highlightline mode
 #+BEGIN_SRC emacs-lisp
-;; (when window-system (global-hl-line-mode t))
+(when window-system (global-hl-line-mode t))
 #+END_SRC
 ** Time
 #+BEGIN_SRC emacs-lisp
@@ -77,73 +77,66 @@
       kept-old-versions 5    ; and how many of the old
       )
 #+END_SRC
-* Appearance
-** Fonts
+* Fonts
 #+BEGIN_SRC emacs-lisp
+;(add-to-list 'default-frame-alist 
+;             '(font . "Misc Termsyn 12"))
+
 (set-default-font "Iosevka Nerd Font 10")
 (setq default-frame-alist '((font . "Iosevka Nerd Font 10")))
+
+;(set-default-font "ShureTechMono Nerd Font 10")
+;(setq default-frame-alist '((font . "ShureTechMono Nerd Font 10")))
+
 #+END_SRC
-** Themes
-*** Atom Theme
+* Themes
+** Atom themes
 #+BEGIN_SRC emacs-lisp
 (use-package atom-one-dark-theme
    :defer t)
 #+END_SRC
-*** Base16-theme
+** Base16-themes
 #+BEGIN_SRC emacs-lisp
-(use-package base16-theme
+    (use-package base16-theme
+                 :defer t)
+#+END_SRC
+** Moe-theme 
+#+BEGIN_SRC emacs-lisp
+  (use-package moe-theme
+    :defer t) 
+#+END_SRC
+** Solarized-theme 
+#+BEGIN_SRC emacs-lisp
+ (use-package solarized-theme
    :defer t)
 #+END_SRC
-*** Spacemacs theme
+** Sunburn-Theme
 #+BEGIN_SRC emacs-lisp
-(use-package spacemacs-theme
-   :defer t)
+  ;; Theme based on zenburn
+  (use-package sunburn-theme
+    :defer t)
 #+END_SRC
-*** Zenburn-theme
+** Zenburn-theme  
 #+BEGIN_SRC emacs-lisp
 (use-package zenburn-theme
    :defer t)
 #+END_SRC
-*** Tao theme
+** Goose-theme
 #+BEGIN_SRC emacs-lisp
-(use-package tao-theme
-   :defer t)
+  (use-package goose-theme
+    :defer t) 
 #+END_SRC
-*** Solarized-theme
+** Load-theme 
 #+BEGIN_SRC emacs-lisp
-(use-package solarized-theme
-   :defer t)
+;;  (load-theme 'atom-one-dark t)
+  (load-theme 'solarized-dark t)
+;;    (load-theme 'zenburn t)
 #+END_SRC
-*** challenger-deep-theme
+** Set background
 #+BEGIN_SRC emacs-lisp
-(use-package challenger-deep-theme
-   :defer t)
+; (set-background-color "#151515")
 #+END_SRC
-*** Them Changing Functions
-#+BEGIN_SRC emacs-lisp
-    (defun switch-theme (theme)
-      "Disables any currently active themes and loads THEME."
-      ;;interactive call taken from load-theme
-      (interactive
-       (list
-        (intern (completing-read "Load custom theme: "
-                                 (mapc 'symbol-name
-                                       (custom-available-themes))))))
-      (let ((enabled-themes custom-enabled-themes))
-        (mapc #'disable-theme custom-enabled-themes)
-        (load-theme theme t)))
-
-    (defun disable-active-themes ()
-      "Disables any currently active themes listed in 'custom-enabled'themes'."
-      (interactive)
-      (mapc #'disable-theme custom-enabled-themes))
-#+END_SRC
-** Load-theme
-#+BEGIN_SRC emacs-lisp
- (load-theme 'challenger-deep t)
-#+END_SRC
-** Modeline packages
-*** Smart-line-mode
+** Smart-line-mode
 #+BEGIN_SRC emacs-lisp
       (use-package smart-mode-line
         :ensure t
@@ -163,6 +156,38 @@
           ))
       ;    (sml/setup)
 #+END_SRC
+** Tao theme
+#+BEGIN_SRC emacs-lisp
+  (use-package tao-theme
+    :defer t)
+#+END_SRC
+** theme modelines
+#+BEGIN_SRC emacs-lisp
+;  (moe-theme-set-color 'cyan)
+    ;; (Available colors: blue, orange, green ,magenta, yellow, purple, red, cyan, w/b.)
+#+END_SRC
+** Shamelessly stolen function
+#+BEGIN_SRC emacs-lisp
+    (defun switch-theme (theme)
+      "Disables any currently active themes and loads THEME."
+      ;;interactive call taken from load-theme
+      (interactive
+       (list
+        (intern (completing-read "Load custom theme: "
+                                 (mapc 'symbol-name
+                                       (custom-available-themes))))))
+      (let ((enabled-themes custom-enabled-themes))
+        (mapc #'disable-theme custom-enabled-themes)
+        (load-theme theme t)))
+
+    (defun disable-active-themes ()
+      "Disables any currently active themes listed in 'custom-enabled'themes'."
+      (interactive)
+      (mapc #'disable-theme custom-enabled-themes))
+
+  ;  (global-set-key (kbd "\C-<f12>") 'switch-theme)
+  ;  (global-set-key (kbd "\C-<f11>") 'disable-active-themes)
+#+END_SRC
 * Custom Keybindings
 #+BEGIN_SRC emacs-lisp
   ;; revert buffer
@@ -177,11 +202,14 @@
   (global-set-key (kbd "\e\eo")
                   (lambda () (interactive) (find-file "~/.emacs.d/organization.org")))
 
+
+  ;; Help keybinding
+;  (bind-key"C-z" 'help-command)
 #+END_SRC
 * Custom Functions
-** Emacs Novel Reading mode
+** Emacs Novel reading mode
 #+BEGIN_SRC emacs-lisp
-  (defun xah-toggle-read-novel-mode ()
+  (defun aitbg-toggle-read-novel-mode ()
     "Setup current buffer to be suitable for reading long novel/article text.
 
   • Line wrap at word boundaries.
@@ -208,79 +236,54 @@
         (put this-command 'state-on-p nil)))
     (redraw-frame (selected-frame)))
 #+END_SRC
-** Centered text mode
-#+BEGIN_SRC emacs-lisp
-  (defun center-text ()
-    "Center the text in the middle of the buffer. Works best in full screen"
-    (interactive)
-    (set-window-margins (car (get-buffer-window-list (current-buffer) nil t))
-                          (/ (window-width) 4)
-                          (/ (window-width) 4)))
-
-  (defun center-text-clear ()
-    (interactive)
-    (set-window-margins (car (get-buffer-window-list (current-buffer) nil t))
-                          nil
-                          nil))
-
-  (setq centered nil)
-
-  (defun center-text-mode ()
-    (interactive)
-    (if centered
-      (progn (center-text-clear)
-             (setq centered nil)) 
-      (progn (center-text)
-             (setq centered t))))
-
-#+END_SRC
-* Which-key: Shows options
+* Which-key: show options
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
                :ensure t
                :config (which-key-mode))
 #+END_SRC
-* Swiper (replace i-search)
+* Console/swiper/ivy
 #+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :bind (("C-s" . 'swiper)
-           ("C-r" . 'swiper)))
+    (use-package counsel
+      :ensure t
+      :bind
+      (
+  ;     ("C-z f" . counsel-describe-function)
+  ;     ("C-c k" . counsel-ag)
+       ("M-y" . counsel-yank-pop)
+       :map ivy-minibuffer-map
+       ("M-y" . ivy-next-line)))
+
+    (use-package ivy
+      :ensure t
+      :diminish (ivy-mode)
+      :bind (("C-x b" . ivy-switch-buffer))
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy))
+
+    (use-package swiper
+      :ensure t
+      :bind (("C-s" . swiper)
+             ("C-r" . swiper)
+             ("C-c C-r" . ivy-resume)
+             ("M-x" . counsel-M-x)
+             ("C-x C-f" . counsel-find-file))
+      :config
+      (progn
+        (ivy-mode 1)
+        (setq ivy-use-virtual-buffers t)
+        (setq ivy-display-style 'fancy)
+        (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+        ))
 #+END_SRC
-* Avy 
+* Avy
 #+BEGIN_SRC emacs-lisp
   (use-package avy
     :ensure t
     :bind
       ("M-s" . avy-goto-char))
-#+END_SRC
-* Helm
-** Helm
-#+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :bind
-    ("C-x C-f" . 'helm-find-files)
-    ("C-x C-b" . 'helm-buffers-list)
-    ("M-x" . 'helm-M-x)
-    :init
-    (progn
-      (require 'helm-config)
-      (helm-mode 1)))
-#+END_SRC
-** Helm Descbinds
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-descbinds
-    :ensure t
-    :bind (("C-h b" . helm-descbinds)
-           ("C-h w" . helm-descbinds)))
-#+END_SRC
-** Helm Swoop
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-swoop
-    :ensure t
-    :bind
-    ("C-x c s" . helm-swoop))
 #+END_SRC
 * Dashboard
 #+BEGIN_SRC emacs-lisp
@@ -292,8 +295,29 @@
                             (projects . 5)))
     (setq dashboard-banner-logo-title "Welcome To Emacs!"))
 #+END_SRC
-* Buffers 
-** Listbuffers now ibuffer
+* Windows and movement etc
+** Winner mode undo/redo changes to windows
+#+BEGIN_SRC emacs-lisp
+  (use-package winner
+    :config
+    (winner-mode t))
+;    :bind(("M-s-<left>" . winnder-undo)
+;          ("M-s-<right>" . winner-redo)))
+#+END_SRC
+** Ace Windows jump around frames
+#+BEGIN_SRC emacs-lisp
+  (use-package ace-window
+    :ensure t
+    :init
+    (progn
+      (setq aw-scope 'frame)
+      (global-set-key (kbd "C-x O") 'other-frame)
+      (global-set-key [remap other-window] 'ace-window)
+      (custom-set-faces
+       '(aw-leading-char-face
+         ((t (:inherit ace-jump-face-foreground :height 2.5)))))))
+#+END_SRC
+* Buffers
 #+BEGIN_SRC emacs-lisp
   (defalias 'list-buffers 'ibuffer)
 #+END_SRC
@@ -334,6 +358,13 @@
              ("\\.md\\'" . markdown-mode)
              ("\\.markdown\\'" . markdown-mode)))
 ;    :init (setq markdown-command "multimarkdown"))
+#+END_SRC
+** Pandoc Exporter
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-pandoc
+;    :no-require t
+;    :defer 10
+    :ensure t)
 #+END_SRC
 * Small packages
 ** Expand Marked region
@@ -426,79 +457,73 @@
     :ensure t)
 
 #+END_SRC
-* Languages
-** C and C++
- #+BEGIN_SRC emacs-lisp
-      ;; Available C style:
-      ;; “gnu”: The default style for GNU projects
-      ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
-      ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
-      ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-      ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
-      ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
-      ;; “linux”: What the Linux developers use for kernel development
-      ;; “python”: What Python developers use for extension modules
-      ;; “java”: The default style for java-mode (see below)
-      ;; “user”: When you want to define your own style
-     (setq
-      c-default-style "ellemtel" 
-      )
+* C and C++
+#+BEGIN_SRC emacs-lisp
+     ;; Available C style:
+     ;; “gnu”: The default style for GNU projects
+     ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+     ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+     ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+     ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+     ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+     ;; “linux”: What the Linux developers use for kernel development
+     ;; “python”: What Python developers use for extension modules
+     ;; “java”: The default style for java-mode (see below)
+     ;; “user”: When you want to define your own style
+    (setq
+     c-default-style "ellemtel" 
+     )
 
-      ;;Makes flycheck use c++11 as standard
+     ;;Makes flycheck use c++11 as standard
 
-    (use-package flycheck-clang-analyzer
-      :ensure t
-      :config
-      (with-eval-after-load 'flycheck
-        (require 'flycheck-clang-analyzer)
-         (flycheck-clang-analyzer-setup)))
-
-    (use-package company-c-headers
-      :ensure t
-      :config
-        (require 'company)
-        (add-to-list 'company-backends 'company-c-headers))
-
-    (use-package company-irony
-      :ensure t
-      :config
-        (require 'company)
-        (add-to-list 'company-backends 'company-irony))
-
-    (use-package irony
+   (use-package flycheck-clang-analyzer
      :ensure t
      :config
-       (add-hook 'c++-mode-hook 'irony-mode)
-       (add-hook 'c-mode-hook 'irony-mode)
-       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+     (with-eval-after-load 'flycheck
+       (require 'flycheck-clang-analyzer)
+        (flycheck-clang-analyzer-setup)))
 
-   (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
- #+END_SRC
-** Python
- #+BEGIN_SRC emacs-lisp
-   (use-package anaconda-mode
+   (use-package company-c-headers
      :ensure t
-     :commands anaconda-mode
-     :diminish anaconda-mode
-     :init
-     (progn
-       (add-hook 'python-mode-hook 'anaconda-mode)
-       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
+     :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-c-headers))
 
-   (use-package company-anaconda
+   (use-package company-irony
      :ensure t
-     :init (add-to-list 'company-backends 'company-anaconda))
+     :config
+       (require 'company)
+       (add-to-list 'company-backends 'company-irony))
 
-   (use-package py-autopep8
-     :ensure t
-     :commands (py-autopep8-enable-on-save py-autopep8-buffer)
-     :init
-   (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
- #+END_SRC
-** Clojure
+   (use-package irony
+    :ensure t
+    :config
+      (add-hook 'c++-mode-hook 'irony-mode)
+      (add-hook 'c-mode-hook 'irony-mode)
+      (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+#+END_SRC
+* Python
 #+BEGIN_SRC emacs-lisp
-  (use-package cider
-    :ensure t)
+  (use-package anaconda-mode
+    :ensure t
+    :commands anaconda-mode
+    :diminish anaconda-mode
+    :init
+    (progn
+      (add-hook 'python-mode-hook 'anaconda-mode)
+      (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
+
+  (use-package company-anaconda
+    :ensure t
+    :init (add-to-list 'company-backends 'company-anaconda))
+
+  (use-package py-autopep8
+    :ensure t
+    :commands (py-autopep8-enable-on-save py-autopep8-buffer)
+    :init
+  (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
 #+END_SRC
 * Treemacs
 #+BEGIN_SRC emacs-lisp
@@ -535,7 +560,8 @@
       :defer t
       :ensure t
       :config
-      (setq treemacs-header-function #'treemacs-projectile-create-header))
+      (setq treemacs-header-function #'treemacs-projectile-create-header)
+  )
 #+END_SRC
 * Magit 
 #+BEGIN_SRC emacs-lisp
@@ -547,28 +573,21 @@
   :bind
     ("M-g" . magit-status))
 #+END_SRC
-
 * Misc
 #+BEGIN_SRC emacs-lisp
 (use-package ag
 :ensure t)
 #+END_SRC
 * Projectile
-** Projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :ensure t
     :init
       (projectile-mode 1))
 
-;  (setq projectile-completion-system 'ivy)
+  (setq projectile-completion-system 'ivy)
 
 (global-set-key (kbd "<f5>") 'projectile-compile-project)
-#+END_SRC
-** helm-projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-projectile
-    :ensure t)
 #+END_SRC
 * Web Development
 ** web-mode
