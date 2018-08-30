@@ -8,8 +8,10 @@ super + Return
 
 # program launcher
 super + d
-    rofi -show run -modi run,window -show-icons -sidebar-mode -terminal st  
-#	rofi -show run
+       rofi -show run
+
+#    rofi -show run -modi run,window -show-icons -sidebar-mode -terminal st  
+
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -135,8 +137,8 @@ super + {Left,Down,Up,Right}
 ######super + z
 
 
-Pause
-	~/scripts/lock.sh 
+XF86ScreenSaver
+	~/.scripts/lockscreen
 
 
 
@@ -180,11 +182,22 @@ XF86MonBrightnessDown
 
 # Screen Shot
 Print
-        scrot 'scrot_%Y-%m-%d-%S_$wx$h.png'
+        scrot 'scrot_%Y-%m-%d-%S_$wx$h.png' -e 'mv $f ~/Pictures/Scrots/'
 
 
 
 # ------- APPLICATION LAUNCH ------- #
 
 super + shift + i
-      firefox 
+      firefox
+
+super + n 
+	urxvt -e ncmpcpp
+
+
+# ------ CUSTOM SCRIPTS ------- #
+
+# toggle gaps
+
+super + alt + g
+      $HOME./config/bspwm/togglegaps.sh

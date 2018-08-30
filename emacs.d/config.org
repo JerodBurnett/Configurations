@@ -1,5 +1,5 @@
 #+TITLE: My Emacs Configuration File
-#+AUTHOR: Jerod Burnett
+#+AUTHOR: Jerod Burnett 
 #+OPTIONS: toc:4 h:4
 #+LAYOUT: post
 #+DESCRIPTION: Loads config from init.el, exports the emacs lisp from this file
@@ -58,13 +58,19 @@
 ** Time
 #+BEGIN_SRC emacs-lisp
 (setq display-time-24hr-format nil)
-(setq display-time-format "%H:%M - %d %B %Y")
+(setq display-time-format "%I:%M %p - %d %B %Y")
 
 (display-time-mode t)
 #+END_SRC
 ** Parens etc
 #+BEGIN_SRC emacs-lisp
 ;;matching pairs, always
+(setq electric-pair-pairs '(
+                           (?\{ . ?\})
+                           (?\( . ?\))
+                           (?\[ . ?\])
+                           (?\" . ?\")
+                           ))
 (electric-pair-mode 1) 
 #+END_SRC
 ** Backups
@@ -77,13 +83,31 @@
       kept-old-versions 5    ; and how many of the old
       )
 #+END_SRC
-* Appearance
-** Fonts
+** Resize Buffers
 #+BEGIN_SRC emacs-lisp
-(set-default-font "Iosevka Nerd Font 10")
-(setq default-frame-alist '((font . "Iosevka Nerd Font 10")))
+  (global-set-key (kbd "C-s-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "C-s-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "C-s-<down>") 'shrink-window)
+  (global-set-key (kbd "C-s-<up>") 'enlarge-window)
 #+END_SRC
-** Themes
+** Tramp
+#+BEGIN_SRC emacs-lisp
+    (setq tramp-default-method "ssh")
+#+END_SRC
+* Appearance
+** Fonts 
+#+BEGIN_SRC emacs-lisp
+  ;; (set-default-font "Iosevka Nerd Font 11")
+  ;; (setq default-frame-alist '((font . "Iosevka Nerd Font 11")))
+   (set-default-font "Iosevka 11")
+   (setq default-frame-alist '((font . "Iosevka 11")))
+#+END_SRC
+** Themes 
+*** anti-zenburn-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package anti-zenburn-theme
+    :defer t)
+#+END_SRC
 *** Atom Theme
 #+BEGIN_SRC emacs-lisp
 (use-package atom-one-dark-theme
@@ -94,32 +118,54 @@
 (use-package base16-theme
    :defer t)
 #+END_SRC
-*** Spacemacs theme
+*** cherry-blossom-theme
 #+BEGIN_SRC emacs-lisp
-(use-package spacemacs-theme
-   :defer t)
+  (use-package cherry-blossom-theme
+    :defer t)
 #+END_SRC
-*** Zenburn-theme
+*** color-theme-modern
 #+BEGIN_SRC emacs-lisp
-(use-package zenburn-theme
-   :defer t)
+  (use-package color-theme-modern
+    :defer t)
 #+END_SRC
-*** Tao theme
+*** flatui
 #+BEGIN_SRC emacs-lisp
-(use-package tao-theme
-   :defer t)
+  (use-package flatui-theme
+    :defer t)
+  (use-package flatui-dark-theme
+    :defer t)
+#+END_SRC
+*** gotham-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package gotham-theme
+    :defer t)
+#+END_SRC
+*** kooten-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package kooten-theme 
+    :defer t)
+#+END_SRC 
+*** oceanic-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package oceanic-theme
+    :defer t)
+#+END_SRC
+*** organic-green-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package organic-green-theme
+    :defer t)
 #+END_SRC
 *** Solarized-theme
 #+BEGIN_SRC emacs-lisp
 (use-package solarized-theme
    :defer t)
 #+END_SRC
-*** challenger-deep-theme
+*** toxi-theme
 #+BEGIN_SRC emacs-lisp
-(use-package challenger-deep-theme
-   :defer t)
+  (use-package toxi-theme
+    :defer t)
 #+END_SRC
-*** Them Changing Functions
+*** Theme Changing Functions
 #+BEGIN_SRC emacs-lisp
     (defun switch-theme (theme)
       "Disables any currently active themes and loads THEME."
@@ -140,7 +186,7 @@
 #+END_SRC
 ** Load-theme
 #+BEGIN_SRC emacs-lisp
- (load-theme 'challenger-deep t)
+ (load-theme 'cherry-blossom t)
 #+END_SRC
 ** Modeline packages
 *** Smart-line-mode
@@ -163,7 +209,34 @@
           ))
       ;    (sml/setup)
 #+END_SRC
-* Custom Keybindings
+* Custom Modifications
+** Daedreth improvements
+*** Improved Kill word
+#+BEGIN_SRC emacs-lisp
+  (defun daedreth/kill-inner-word ()
+    "Kills the entire word your cursor is in. Equivalent to 'ciw' in vim."
+    (interactive)
+    (forward-char 1)
+    (backward-word)
+    (kill-word 1))
+  (global-set-key (kbd "C-c M-d") 'daedreth/kill-inner-word)
+#+END_SRC
+*** quicker emacs-lisp in config source blogs
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-structure-template-alist
+             '("el" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC"))
+#+END_SRC
+*** org edit src code
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+  (global-set-key (kbd "C-c '") 'org-edit-src-code)
+#+END_SRC
+** Custom Keybindings
+** Previous outline
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c C-p") 'outline-previous-visible-heading)
+#+END_SRC
+** will sort later
 #+BEGIN_SRC emacs-lisp
   ;; revert buffer
   (global-set-key (kbd "<f7>") 'revert-buffer)
@@ -178,7 +251,7 @@
                   (lambda () (interactive) (find-file "~/.emacs.d/organization.org")))
 
 #+END_SRC
-* Custom Functions
+** Custom Functions
 ** Emacs Novel Reading mode
 #+BEGIN_SRC emacs-lisp
   (defun xah-toggle-read-novel-mode ()
@@ -234,28 +307,80 @@
              (setq centered t))))
 
 #+END_SRC
-* Which-key: Shows options
+** Buffers 
+*** Listbuffers now ibuffer
+ #+BEGIN_SRC emacs-lisp
+   (defalias 'list-buffers 'ibuffer)
+ #+END_SRC
+* Helping Tools and General Manipulation/Movement
+** Which-key: Shows options
+ #+BEGIN_SRC emacs-lisp
+   (use-package which-key
+                :ensure t
+                :config (which-key-mode))
+ #+END_SRC
+** Movement 
+*** Avy 
+  #+BEGIN_SRC emacs-lisp
+    (use-package avy
+      :ensure t
+      :bind
+        ("M-s" . avy-goto-char))
+  #+END_SRC
+*** Swiper
 #+BEGIN_SRC emacs-lisp
-  (use-package which-key
-               :ensure t
-               :config (which-key-mode))
+       (use-package swiper
+         :ensure t
+         :bind (("C-s" . swiper)))
 #+END_SRC
-* Swiper (replace i-search)
+*** Beacon (helps you see where you are)
 #+BEGIN_SRC emacs-lisp
-  (use-package swiper
+  (use-package beacon
     :ensure t
-    :bind (("C-s" . 'swiper)
-           ("C-r" . 'swiper)))
+    :config
+      (beacon-mode 1))
 #+END_SRC
-* Avy 
+*** Switch window
+ #+BEGIN_SRC emacs-lisp
+   (use-package switch-window
+     :ensure t
+     :config
+       (setq switch-window-input-style 'minibuffer)
+       (setq switch-window-increase 4)
+       (setq switch-window-threshold 2)
+       (setq switch-window-shortcut-style 'qwerty)
+       (setq switch-window-qwerty-shortcuts
+           '("a" "s" "d" "f" "j" "k" "l" "i" "o"))
+     :bind
+       ([remap other-window] . switch-window))
+ #+END_SRC
+*** windmove
 #+BEGIN_SRC emacs-lisp
-  (use-package avy
-    :ensure t
-    :bind
-      ("M-s" . avy-goto-char))
+(use-package windmove
+  :ensure t
+  :bind
+  (("<f2> <right>" . windmove-right)
+   ("<f2> <left>" . windmove-left)
+   ("<f2> <up>" . windmove-up)
+   ("<f2> <down>" . windmove-down)
+   ))
 #+END_SRC
-* Helm
+** Visual
+*** rainbow-mode
+ #+BEGIN_SRC emacs-lisp
+   (use-package rainbow-mode
+     :ensure t
+     :init
+     (add-hook 'prog-mode-hook 'rainbow-mode))
+ #+END_SRC
+*** Smooth Scrolling
+ #+BEGIN_SRC emacs-lisp
+ (use-package smooth-scrolling
+    :disabled
+    :ensure t)
+ #+END_SRC
 ** Helm
+*** Helm
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure t
@@ -263,65 +388,132 @@
     ("C-x C-f" . 'helm-find-files)
     ("C-x C-b" . 'helm-buffers-list)
     ("M-x" . 'helm-M-x)
+    :config
+    (defun daedreth/helm-hide-minibuffer ()
+      (when (with-helm-buffer helm-echo-input-in-header-line)
+        (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+          (overlay-put ov 'window (selected-window))
+          (overlay-put ov 'face
+                       (let ((bg-color (face-background 'default nil)))
+                         `(:background ,bg-color :foreground ,bg-color)))
+          (setq-local cursor-type nil))))
+    (add-hook 'helm-minibuffer-set-up-hook 'daedreth/helm-hide-minibuffer)
+    (setq helm-autoresize-max-height 0
+          helm-autoresize-min-height 40
+          helm-M-x-fuzzy-match t
+          helm-buffers-fuzzy-matching t
+          helm-recentf-fuzzy-match t
+          helm-semantic-fuzzy-match t
+          helm-imenu-fuzzy-match t
+          helm-split-window-in-side-p nil
+          helm-move-to-line-cycle-in-source nil
+          helm-ff-search-library-in-sexp t
+          helm-scroll-amount 8 
+          helm-echo-input-in-header-line t)
     :init
-    (progn
-      (require 'helm-config)
-      (helm-mode 1)))
+    (helm-mode 1))
+
+  (require 'helm-config)    
+  (helm-autoresize-mode 1)
+  (define-key helm-find-files-map (kbd "C-b") 'helm-find-files-up-one-level)
+  (define-key helm-find-files-map (kbd "C-f") 'helm-execute-persistent-action)
 #+END_SRC
-** Helm Descbinds
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-descbinds
-    :ensure t
-    :bind (("C-h b" . helm-descbinds)
-           ("C-h w" . helm-descbinds)))
-#+END_SRC
-** Helm Swoop
-#+BEGIN_SRC emacs-lisp
+*** Helm-swoop
+#+BEGIN_SRC emacs-lisp 
   (use-package helm-swoop
     :ensure t
-    :bind
-    ("C-x c s" . helm-swoop))
+   :bind
+   (("C-r" . helm-swoop)))
 #+END_SRC
-* Dashboard
+*** Helm-descbinds
 #+BEGIN_SRC emacs-lisp
-(use-package dashboard
+(use-package helm-descbinds
   :ensure t
-  :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-items '((recents  . 5)
-                            (projects . 5)))
-    (setq dashboard-banner-logo-title "Welcome To Emacs!"))
+  :bind (("C-h b" . helm-descbinds)
+         ("C-h w" . helm-descbinds)))
 #+END_SRC
-* Buffers 
-** Listbuffers now ibuffer
-#+BEGIN_SRC emacs-lisp
-  (defalias 'list-buffers 'ibuffer)
-#+END_SRC
-* Org-mode
-** Latest of org-mode
-#+BEGIN_SRC emacs-lisp
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-#+END_SRC
-** org-plus-contrib
-#+BEGIN_SRC emacs-lisp
-(use-package org
-   :ensure org-plus-contrib)
-#+END_SRC
-** Org-bullets
-#+BEGIN_SRC emacs-lisp
-  ;;pretty
+** 
+** Text/Text Manipulation 
+*** Company
+ #+BEGIN_SRC emacs-lisp
+   (use-package company
+     :ensure t
+     :bind (:map company-active-map
+                 ("C-n" . company-select-next)
+                 ("C-p" . company-select-previous)
+                 ("SPC" . company-abort)
+                 )
+     :init
+     (global-company-mode t)
+     :config (add-hook 'prog-mode-hook 'company-mode)
+;     (setq company-idle-delay 0.4) ;;delay until complete (used to be 0.4)
+     (setq company-selection-wrap-around t)) ;; Just continue moving
+ #+END_SRC
+*** Mark-multiple 
+ #+BEGIN_SRC emacs-lisp
+   (use-package mark-multiple
+     :ensure t
+     :bind ("C-c q" . 'mark-next-like-this))
+ #+END_SRC
+*** Aggressive Indent
+  #+BEGIN_SRC emacs-lisp
+      (use-package aggressive-indent
+          :ensure t)
+  #+END_SRC
 
-  (use-package org-bullets
-               :ensure t
-               :config
-               (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-#+END_SRC
-** html syntax highlighting export for code
+*** Expand Marked region
+  #+BEGIN_SRC emacs-lisp
+    (use-package expand-region
+                 :ensure t
+                 :config
+                 (global-set-key (kbd "C-=") 'er/expand-region))
+  #+END_SRC
+*** Hungry-delete
+ #+BEGIN_SRC emacs-lisp
+   (use-package hungry-delete
+                :ensure t
+                :config
+                (global-hungry-delete-mode))
+ #+END_SRC
+*** Iedit (C-;)
+ #+BEGIN_SRC emacs-lisp
+   (use-package iedit
+     :ensure t)
+ #+END_SRC
+*** Smart Parens 
+  #+BEGIN_SRC emacs-lisp
+    (use-package smartparens
+        :ensure t
+        :diminish smartparens-mode
+        :config
+        (add-hook 'prog-mode-hook 'smartparens-mode))
+  #+END_SRC    
+** Undo tree 
 #+BEGIN_SRC emacs-lisp
-  (use-package htmlize
+(use-package undo-tree 
+  :ensure t
+  :init 
+  (global-undo-tree-mode)
+  (global-set-key (kbd "M-/") 'undo-tree-visualize))
+#+END_SRC
+** pop-up kill ring
+#+BEGIN_SRC emacs-lisp
+  (use-package popup-kill-ring
+    :ensure t
+    :bind ("\e\ey" . Popup-Kill-ring))
+#+END_SRC
+** sudo-edit
+#+BEGIN_SRC emacs-lisp
+  (use-package sudo-edit
     :ensure t)
 #+END_SRC
-* LaTex / Markdown / Pandoc / etc
+*** Helm-tramp
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-tramp
+    :ensure t)
+#+END_SRC
+* Programming/Languages
+** LaTex / Markdown / Pandoc / etc
 ** Other
 #+BEGIN_SRC emacs-lisp
   (use-package tex
@@ -335,207 +527,253 @@
              ("\\.markdown\\'" . markdown-mode)))
 ;    :init (setq markdown-command "multimarkdown"))
 #+END_SRC
-* Small packages
-** Expand Marked region
+** Org-mode
+*** Custom Default Org Changes 
+ #+BEGIN_SRC emacs-lisp
+ (setq org-ellipsis "⤵")
+ #+END_SRC
+*** Latest of org-mode
+ #+BEGIN_SRC emacs-lisp
+ (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+ #+END_SRC
+*** org-plus-contrib
+ #+BEGIN_SRC emacs-lisp
+ (use-package org
+    :ensure org-plus-contrib)
+ #+END_SRC
+*** Org-bullets
+ #+BEGIN_SRC emacs-lisp
+   ;;pretty
+
+   (use-package org-bullets
+                :ensure t
+                :config
+                (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+ #+END_SRC
+*** Org-something
+** html syntax highlighting export for code
 #+BEGIN_SRC emacs-lisp
-  (use-package expand-region
-               :ensure t
-               :config
-               (global-set-key (kbd "C-=") 'er/expand-region))
-#+END_SRC
-** Hungry-delete
-#+BEGIN_SRC emacs-lisp
-  (use-package hungry-delete
-               :ensure t
-               :config
-               (global-hungry-delete-mode))
-#+END_SRC
-** Smooth Scrolling
-#+BEGIN_SRC emacs-lisp
-(use-package smooth-scrolling
-   :disabled
-   :ensure t)
-#+END_SRC
-** Undo tree 
-#+BEGIN_SRC emacs-lisp
-(use-package undo-tree 
-  :ensure t
-  :init 
-  (global-undo-tree-mode)
-  (global-set-key (kbd "M-/") 'undo-tree-visualize))
-#+END_SRC
-** rainbow-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :ensure t
-    :init
-    (add-hook 'prog-mode-hook 'rainbow-mode))
-#+END_SRC
-** pop-up kill ring
-#+BEGIN_SRC emacs-lisp
-  (use-package popup-kill-ring
-    :ensure t
-    :bind ("\e\ey" . Popup-Kill-ring))
-#+END_SRC
-** sudo-edit
-#+BEGIN_SRC emacs-lisp
-  (use-package sudo-edit
+  (use-package htmlize
     :ensure t)
 #+END_SRC
-* Auto-complete
-** Company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :bind (:map company-active-map
-                ("C-n" . company-select-next)
-                ("C-p" . company-select-previous)
-                ("SPC" . company-abort)
-                )
-    :init
-    (global-company-mode t)
-    :config (add-hook 'prog-mode-hook 'company-mode)
-    (setq company-idle-delay 0.4) ;;delay until complete
-    (setq company-selection-wrap-around t)) ;; Just continue moving
-#+END_SRC
-* Flycheck
+** Yasnippet (quick bits of code)
+ #+BEGIN_SRC emacs-lisp
+   (use-package yasnippet
+     :ensure t
+     :init
+     (yas-global-mode 1))
+ ;    :config
+ ;    (yas-reload-all))
+
+   ;; yasnippet-snippets ..mine didn't come with any?
+
+   (use-package yasnippet-snippets
+     :ensure t)
+
+ #+END_SRC
+** Languages
+*** C and C++
+  #+BEGIN_SRC emacs-lisp
+       ;; Available C style:
+       ;; “gnu”: The default style for GNU projects
+       ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
+       ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
+       ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
+       ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
+       ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
+       ;; “linux”: What the Linux developers use for kernel development
+       ;; “python”: What Python developers use for extension modules
+       ;; “java”: The default style for java-mode (see below)
+       ;; “user”: When you want to define your own style
+      (setq
+       c-default-style "ellemtel" 
+       )
+
+       ;;Makes flycheck use c++11 as standard
+
+     (use-package flycheck-clang-analyzer
+       :ensure t
+       :config
+       (with-eval-after-load 'flycheck
+         (require 'flycheck-clang-analyzer)
+          (flycheck-clang-analyzer-setup)))
+
+     (use-package company-c-headers
+       :ensure t
+       :config
+         (require 'company)
+         (add-to-list 'company-backends 'company-c-headers))
+
+     (use-package company-irony
+       :ensure t
+       :config
+         (require 'company)
+         (add-to-list 'company-backends 'company-irony))
+
+     (use-package irony
+      :ensure t
+      :config
+        (add-hook 'c++-mode-hook 'irony-mode)
+        (add-hook 'c-mode-hook 'irony-mode)
+        (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+    (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+  #+END_SRC
+*** Python
+  #+BEGIN_SRC emacs-lisp
+    (use-package anaconda-mode
+      :ensure t
+      :commands anaconda-mode
+      :diminish anaconda-mode
+      :init
+      (progn
+        (add-hook 'python-mode-hook 'anaconda-mode)
+        (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
+
+    (use-package company-anaconda
+      :ensure t
+      :init (add-to-list 'company-backends 'company-anaconda))
+
+    (use-package py-autopep8
+      :ensure t
+      :commands (py-autopep8-enable-on-save py-autopep8-buffer)
+      :init
+    (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+  #+END_SRC
+*** Clojure
+ #+BEGIN_SRC emacs-lisp
+   (use-package cider
+     :ensure t)
+ #+END_SRC
+** Flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
                :ensure t
                :init
                (global-flycheck-mode t))
 #+END_SRC
-* Refactoring
-** Iedit (C-;)
-#+BEGIN_SRC emacs-lisp
-  (use-package iedit
-    :ensure t)
-#+END_SRC
-* Yasnippet (quick bits of code)
-#+BEGIN_SRC emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :init
-    (yas-global-mode 1))
-;    :config
-;    (yas-reload-all))
-
-  ;; yasnippet-snippets ..mine didn't come with any?
-
-  (use-package yasnippet-snippets
-    :ensure t)
-
-#+END_SRC
-* Languages
-** C and C++
+** Web Development
+*** web-mode
  #+BEGIN_SRC emacs-lisp
-      ;; Available C style:
-      ;; “gnu”: The default style for GNU projects
-      ;; “k&r”: What Kernighan and Ritchie, the authors of C used in their book
-      ;; “bsd”: What BSD developers use, aka “Allman style” after Eric Allman.
-      ;; “whitesmith”: Popularized by the examples that came with Whitesmiths C, an early commercial C compiler.
-      ;; “stroustrup”: What Stroustrup, the author of C++ used in his book
-      ;; “ellemtel”: Popular C++ coding standards as defined by “Programming in C++, Rules and Recommendations,” Erik Nyquist and Mats Henricson, Ellemtel
-      ;; “linux”: What the Linux developers use for kernel development
-      ;; “python”: What Python developers use for extension modules
-      ;; “java”: The default style for java-mode (see below)
-      ;; “user”: When you want to define your own style
-     (setq
-      c-default-style "ellemtel" 
-      )
-
-      ;;Makes flycheck use c++11 as standard
-
-    (use-package flycheck-clang-analyzer
-      :ensure t
-      :config
-      (with-eval-after-load 'flycheck
-        (require 'flycheck-clang-analyzer)
-         (flycheck-clang-analyzer-setup)))
-
-    (use-package company-c-headers
-      :ensure t
-      :config
-        (require 'company)
-        (add-to-list 'company-backends 'company-c-headers))
-
-    (use-package company-irony
-      :ensure t
-      :config
-        (require 'company)
-        (add-to-list 'company-backends 'company-irony))
-
-    (use-package irony
+   (use-package web-mode
+     :ensure t
+     :mode (("\\.erb\\'" . web-mode)
+            ("\\.mustache\\'" . web-mode)
+            ("\\.html?\\'" . web-mode)
+            ("\\.php\\'" . web-mode))
+     :config (progn
+               (setq web-mode-markup-indent-offset 2
+                     web-mode-css-indent-offset 2
+                     web-mode-code-indent-offset 2)))
+ #+END_SRC
+*** Javascript 
+ #+BEGIN_SRC emacs-lisp
+   (use-package js2-mode
      :ensure t
      :config
-       (add-hook 'c++-mode-hook 'irony-mode)
-       (add-hook 'c-mode-hook 'irony-mode)
-       (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+     (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
 
-   (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++14")))
+
+   (use-package js2-refactor
+     :ensure t
+     :after js2-mode
+   ;;  :after hydra
+     :config
+
+     (add-hook 'js2-mode-hook #'js2-refactor-mode)
+     (js2r-add-keybindings-with-prefix "C-c C-r")
+     (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+     ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+     ;; unbind it.
+     (define-key js-mode-map (kbd "M-.") nil))
+
+
+
+   ;;unsure
+   (use-package js-auto-beautify
+     :ensure t)
+
+   (use-package js-import
+     :ensure t)
  #+END_SRC
-** Python
+*** Tern 
  #+BEGIN_SRC emacs-lisp
-   (use-package anaconda-mode
-     :ensure t
-     :commands anaconda-mode
-     :diminish anaconda-mode
-     :init
-     (progn
-       (add-hook 'python-mode-hook 'anaconda-mode)
-       (add-hook 'python-mode-hook 'anaconda-eldoc-mode)))
+   ;; Good for auto completion, works with javascript 
+       (use-package tern
+          :ensure t
+          :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+          )
+          ;; :config
+          ;;   (use-package company-tern
+          ;;      :ensure t
+          ;;      :init (add-to-list 'company-backends 'company-tern)))
 
-   (use-package company-anaconda
-     :ensure t
-     :init (add-to-list 'company-backends 'company-anaconda))
+     ;; The following additional keys are bound:
 
-   (use-package py-autopep8
+     ;; M-.
+     ;;     Jump to the definition of the thing under the cursor.
+     ;; M-,
+     ;;     Brings you back to last place you were when you pressed M-..
+     ;; C-c C-r
+     ;;     Rename the variable under the cursor.
+     ;; C-c C-c
+     ;;     Find the type of the thing under the cursor.
+     ;; C-c C-d
+     ;;     Find docs of the thing under the cursor. Press again to open the associated URL (if any). 
+
+   (use-package company-tern
      :ensure t
-     :commands (py-autopep8-enable-on-save py-autopep8-buffer)
-     :init
-   (add-hook 'python-mode-hook 'py-autopep8-enable-on-save))
+     :after company
+     :after tern
+     :after xref-js2
+     :config
+     (add-to-list 'company-backends 'company-tern)
+     (add-hook 'js2-mode-hook (lambda ()
+                                (tern-mode)
+                                (company-mode)))
+     ;; Disable completion keybindings, as we use xref-js2 instead
+     (define-key tern-mode-keymap (kbd "M-.") nil)
+     (define-key tern-mode-keymap (kbd "M-,") nil)
+
+     (setq company-tern-property-marker " <p>"
+           company-tern-property-marker nil
+           company-tern-meta-as-single-line t
+           company-tooltip-align-annotations t))
+
  #+END_SRC
-** Clojure
-#+BEGIN_SRC emacs-lisp
-  (use-package cider
-    :ensure t)
-#+END_SRC
-* Treemacs
-#+BEGIN_SRC emacs-lisp
-  (use-package treemacs
-      :ensure t
-      :defer t
-      :config
-      (progn
+*** Coffee
+ #+BEGIN_SRC emacs-lisp
+ (use-package coffee-mode
+    :ensure t
+    :init
+    (setq-default coffee-tab-width 2))
+ #+END_SRC
+*** Projectile
+**** Projectile
+  #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+        :ensure t
+        :config
+        (projectile-global-mode)
+      (setq projectile-completion-system 'ivy))
 
-        (setq treemacs-follow-after-init          t
-              treemacs-width                      35
-              treemacs-indentation                2
-              treemacs-git-integration            t
-              treemacs-collapse-dirs              3
-              treemacs-silent-refresh             nil
-              treemacs-change-root-without-asking nil
-              treemacs-sorting                    'alphabetic-desc
-              treemacs-show-hidden-files          t
-              treemacs-never-persist              nil
-              treemacs-is-never-other-window      nil
-              treemacs-goto-tag-strategy          'refetch-index)
+  ;;  (use-package counsel-projectile)
 
-        (treemacs-follow-mode t)
-        (treemacs-filewatch-mode t))
-      :bind
-      (:map global-map
-            ([f8]        . treemacs-toggle)
-            ([f9]        . treemacs-projectile-toggle)
-            ("<C-M-tab>" . treemacs-toggle)
-            ("M-0"       . treemacs-select-window)
-            ("C-c 1"     . treemacs-delete-other-windows)
-          ))
-    (use-package treemacs-projectile
-      :defer t
-      :ensure t
-      :config
-      (setq treemacs-header-function #'treemacs-projectile-create-header))
+    ;  (setq projectile-completion-system 'ivy)
+
+    (global-set-key (kbd "<f5>") 'projectile-compile-project)
+  #+END_SRC
+* Dashboard
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-items '((recents  . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title "Welcome To Emacs!"))
 #+END_SRC
 * Magit 
 #+BEGIN_SRC emacs-lisp
@@ -549,124 +787,88 @@
 #+END_SRC
 
 * Misc
+** ag
 #+BEGIN_SRC emacs-lisp
 (use-package ag
 :ensure t)
 #+END_SRC
-* Projectile
-** Projectile
+** pdf-tools
 #+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :init
-      (projectile-mode 1))
-
-;  (setq projectile-completion-system 'ivy)
-
-(global-set-key (kbd "<f5>") 'projectile-compile-project)
-#+END_SRC
-** helm-projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-projectile
-    :ensure t)
-#+END_SRC
-* Web Development
-** web-mode
-#+BEGIN_SRC emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :mode (("\\.erb\\'" . web-mode)
-           ("\\.mustache\\'" . web-mode)
-           ("\\.html?\\'" . web-mode)
-           ("\\.php\\'" . web-mode))
-    :config (progn
-              (setq web-mode-markup-indent-offset 2
-                    web-mode-css-indent-offset 2
-                    web-mode-code-indent-offset 2)))
-#+END_SRC
-** Javascript 
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
+  (use-package pdf-tools
     :ensure t
     :config
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-    (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+    ;;initialize
+    (pdf-tools-install) 
+    ;;open pdfs scaled to fit page
+    (setq-default pdf-view-display-size 'fit-page)
+    ;;automatically annotate highlights
+    (setq pdf-annot-activate-created-annotations t)
+    ;;turn off cua so copy works
+    (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
 
+    ;; more fine-grained zooming
+    (setq pdf-view-resize-factor 1.1)
+    ;; use regular isearch 
+    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+    ;;keyboard shortcuts
+    (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+    (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+    (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
+    (setq TeX-view-program-selection '((output-pdf "pdf-tools")))
+    (setq TeX-view-program-list '(("pdf-tools" "TeX-pdf-tools-sync-view"))))
 
-  (use-package js2-refactor
-    :ensure t
-    :after js2-mode
-  ;;  :after hydra
-    :config
-
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-    (js2r-add-keybindings-with-prefix "C-c C-r")
-    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-    ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-    ;; unbind it.
-    (define-key js-mode-map (kbd "M-.") nil))
-
-
-
-  ;;unsure
-  (use-package js-auto-beautify
+  (use-package org-pdfview
     :ensure t)
 
-  (use-package js-import
-    :ensure t)
+  (require 'pdf-tools)
+  (require 'org-pdfview)
 #+END_SRC
-** Tern 
+*** pdf-view midnight modes
 #+BEGIN_SRC emacs-lisp
-  ;; Good for auto completion, works with javascript 
-      (use-package tern
-         :ensure t
-         :init (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
-         )
-         ;; :config
-         ;;   (use-package company-tern
-         ;;      :ensure t
-         ;;      :init (add-to-list 'company-backends 'company-tern)))
+  ;; midnite mode hook
+  (add-hook 'pdf-view-mode-hook (lambda ()
+                                  (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
 
-    ;; The following additional keys are bound:
+  (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
 
-    ;; M-.
-    ;;     Jump to the definition of the thing under the cursor.
-    ;; M-,
-    ;;     Brings you back to last place you were when you pressed M-..
-    ;; C-c C-r
-    ;;     Rename the variable under the cursor.
-    ;; C-c C-c
-    ;;     Find the type of the thing under the cursor.
-    ;; C-c C-d
-    ;;     Find docs of the thing under the cursor. Press again to open the associated URL (if any). 
+  (defun bms/pdf-no-filter ()
+    "View pdf without colour filter."
+    (interactive)
+    (pdf-view-midnight-minor-mode -1)
+    )
 
-  (use-package company-tern
-    :ensure t
-    :after company
-    :after tern
-    :after xref-js2
-    :config
-    (add-to-list 'company-backends 'company-tern)
-    (add-hook 'js2-mode-hook (lambda ()
-                               (tern-mode)
-                               (company-mode)))
-    ;; Disable completion keybindings, as we use xref-js2 instead
-    (define-key tern-mode-keymap (kbd "M-.") nil)
-    (define-key tern-mode-keymap (kbd "M-,") nil)
+  ;; change midnite mode colours functions
+  (defun bms/pdf-midnite-original ()
+    "Set pdf-view-midnight-colors to original colours."
+    (interactive)
+    (setq pdf-view-midnight-colors '("#839496" . "#002b36" )) ; original values
+    (pdf-view-midnight-minor-mode)
+    )
 
-    (setq company-tern-property-marker " <p>"
-          company-tern-property-marker nil
-          company-tern-meta-as-single-line t
-          company-tooltip-align-annotations t))
+  (defun bms/pdf-midnite-amber ()
+    "Set pdf-view-midnight-colors to amber on dark slate blue."
+    (interactive)
+    (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; amber
+    (pdf-view-midnight-minor-mode)
+    )
 
-#+END_SRC
-** Coffee
-#+BEGIN_SRC emacs-lisp
-(use-package coffee-mode
-   :ensure t
-   :init
-   (setq-default coffee-tab-width 2))
+  (defun bms/pdf-midnite-green ()
+    "Set pdf-view-midnight-colors to green on black."
+    (interactive)
+    (setq pdf-view-midnight-colors '("#00B800" . "#000000" )) ; green 
+    (pdf-view-midnight-minor-mode)
+    )
+
+  (defun bms/pdf-midnite-colour-schemes ()
+    "Midnight mode colour schemes bound to keys"
+    (local-set-key (kbd "!") (quote bms/pdf-no-filter))
+    (local-set-key (kbd "@") (quote bms/pdf-midnite-amber)) 
+    (local-set-key (kbd "#") (quote bms/pdf-midnite-green))
+    (local-set-key (kbd "$") (quote bms/pdf-midnite-original))
+    )  
+
+  (add-hook 'pdf-view-mode-hook 'bms/pdf-midnite-colour-schemes)
+
 #+END_SRC
 * Diminish mode
 #+BEGIN_SRC emacs-lisp
@@ -675,20 +877,9 @@
     :init
     (diminish 'which-key-mode)
     (diminish 'hungry-delete-mode)
-  ;  (diminish 'beacon-mode)
-  
+    (diminish 'beacon-mode)
+    (diminish 'projectile-mode)
     (diminish 'rainbow-mode))
 #+END_SRC
-* Smart Parens 
-#+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-      :ensure t
-      :diminish smartparens-mode
-      :config
-      (add-hook 'prog-mode-hook 'smartparens-mode))
-#+END_SRC
-* Aggressive Indent
-#+BEGIN_SRC emacs-lisp
-    (use-package aggressive-indent
-        :ensure t)
-#+END_SRC
+* No longer in use:
+  

@@ -2,7 +2,7 @@
 
 sxhkd &
 
-# pkill compton; compton --config ~/.configcompton.conf & 
+ pkill compton; compton --config ~/.config/compton.conf & 
 
 
 #Mouse Focus

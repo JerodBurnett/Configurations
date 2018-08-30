@@ -1,121 +1,44 @@
-!!!! URXVT Settings
+! Font
+!URxvt.font:	xft:Hack:size=10:antialias=true
+!URxvt.font:	xft:ShureTechMono Nerd Font:size=11:antialias=true
+URxvt.font:	xft:Iosevka Term:size=11:antialias=true
+URxvt.scrollBar:	false
 
-!URxvt.background: [70]#000000
-URxvt.font:	   xft:mplus Nerd Font:size=10
-URxvt.scrollBar:   false     
+!URxvt.background:	[70]#000000
 
-!!!!! SOLARIZED DARK
 ! special
-*.foreground:   #93a1a1
-*.background:   #002b36
-*.cursorColor:  #93a1a1
+*.foreground:   #ffffff
+*.background:   #000000
+*.cursorColor:  #ffffff
 
 ! black
-*.color0:       #002b36
-*.color8:       #657b83
+*.color0:       #222827
+*.color8:       #5d6f74
 
 ! red
-*.color1:       #dc322f
-*.color9:       #dc322f
+*.color1:       #d5a8e3
+*.color9:       #cd749c
 
 ! green
-*.color2:       #859900
-*.color10:      #859900
+*.color2:       #9c75dd
+*.color10:      #63b0b0
 
 ! yellow
-*.color3:       #b58900
-*.color11:      #b58900
+*.color3:       #9898ae
+*.color11:      #c0c0dd
 
 ! blue
-*.color4:       #268bd2
-*.color12:      #268bd2
+*.color4:       #654a96
+*.color12:      #5786bc
 
 ! magenta
-*.color5:       #6c71c4
-*.color13:      #6c71c4
+*.color5:       #625566
+*.color13:      #3f3442
 
 ! cyan
-*.color6:       #2aa198
-*.color14:      #2aa198
+*.color6:       #a9d1df
+*.color14:      #849da2
 
 ! white
-*.color7:       #93a1a1
-*.color15:      #fdf6e3
-
-! !!!! ################ ZENBURN ####################XS
-! ! ! special
-!  *.foreground:   #ffffff
-! ! ! *.background:   #000000
-! *.background:   #3f3f3f
-! *.cursorColor:  #ffffff
-
-! ! black
-! *.color0:       #1e2320
-! *.color8:       #709080
-
-! ! red
-! *.color1:       #705050
-! *.color9:       #dca3a3
-
-! ! green
-! *.color2:       #60b48a
-! *.color10:      #c3bf9f
-
-! ! yellow
-! *.color3:       #dfaf8f
-! *.color11:      #f0dfaf
-
-! ! blue
-! *.color4:       #506070
-! *.color12:      #94bff3
-
-! ! magenta
-! *.color5:       #dc8cc3
-! *.color13:      #ec93d3
-
-! ! cyan
-! *.color6:       #8cd0d3
-! *.color14:      #93e0e3
-
-! ! white
-! *.color7:       #dcdccc
-! *.color15:      #ffffff
-
-!!!!! ################# SOLARIZED LIGHT #####################
-
-! ! special
-! *.foreground:   #586e75
-! *.background:   #fdf6e3
-! *.cursorColor:  #586e75
-
-! ! black
-! *.color0:       #002b36
-! *.color8:       #657b83
-
-! ! red
-! *.color1:       #dc322f
-! *.color9:       #dc322f
-
-! ! green
-! *.color2:       #859900
-! *.color10:      #859900
-
-! ! yellow
-! *.color3:       #b58900
-! *.color11:      #b58900
-
-! ! blue
-! *.color4:       #268bd2
-! *.color12:      #268bd2
-
-! ! magenta
-! *.color5:       #6c71c4
-! *.color13:      #6c71c4
-
-! ! cyan
-! *.color6:       #2aa198
-! *.color14:      #2aa198
-
-! ! white
-! *.color7:       #93a1a1
-! *.color15:      #fdf6e3
+*.color7:       #e6ebe5
+*.color15:      #d9d6cf
