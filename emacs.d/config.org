@@ -186,7 +186,8 @@
 #+END_SRC
 ** Load-theme
 #+BEGIN_SRC emacs-lisp
- (load-theme 'cherry-blossom t)
+;; (load-theme 'anti-zenburn t)
+ (load-theme 'atom-one-dark t)
 #+END_SRC
 ** Modeline packages
 *** Smart-line-mode
@@ -829,7 +830,7 @@
   (add-hook 'pdf-view-mode-hook (lambda ()
                                   (pdf-view-midnight-minor-mode))) ; automatically turns on midnight-mode for pdfs
 
-  (setq pdf-view-midnight-colors '("#ff9900" . "#0a0a12" )) ; set the amber profile as default (see below)
+  (setq pdf-view-midnight-colors '("#C5C5C5" . "#0F1419" )); set the amber profile as default (see below)
 
   (defun bms/pdf-no-filter ()
     "View pdf without colour filter."
@@ -852,10 +853,10 @@
     (pdf-view-midnight-minor-mode)
     )
 
-  (defun bms/pdf-midnite-green ()
+  (defun bms/ayu ()
     "Set pdf-view-midnight-colors to green on black."
     (interactive)
-    (setq pdf-view-midnight-colors '("#00B800" . "#000000" )) ; green 
+    (setq pdf-view-midnight-colors '("#C5C5C5" . "#0F1419" )) ; green 
     (pdf-view-midnight-minor-mode)
     )
 
@@ -863,7 +864,7 @@
     "Midnight mode colour schemes bound to keys"
     (local-set-key (kbd "!") (quote bms/pdf-no-filter))
     (local-set-key (kbd "@") (quote bms/pdf-midnite-amber)) 
-    (local-set-key (kbd "#") (quote bms/pdf-midnite-green))
+    (local-set-key (kbd "#") (quote bms/ayu))
     (local-set-key (kbd "$") (quote bms/pdf-midnite-original))
     )  
 

@@ -1,44 +1,43 @@
 ! Font
 !URxvt.font:	xft:Hack:size=10:antialias=true
-!URxvt.font:	xft:ShureTechMono Nerd Font:size=11:antialias=true
-URxvt.font:	xft:Iosevka Term:size=11:antialias=true
+URxvt.font:	xft:Iosevka Term:style=Regular:size=11:antialias=true
+!URxvt.font:	xft:Hasklug Nerd Font Mono:style=Regular:size=10:antialias=true
 URxvt.scrollBar:	false
-
 !URxvt.background:	[70]#000000
 
 ! special
-*.foreground:   #ffffff
-*.background:   #000000
-*.cursorColor:  #ffffff
+*.foreground:   #ABB2BF
+*.background:   #282C34
+*.cursorColor:  #ABB2BF
 
 ! black
-*.color0:       #222827
-*.color8:       #5d6f74
+*.color0:       #282C34
+*.color8:       #3E4452
 
 ! red
-*.color1:       #d5a8e3
-*.color9:       #cd749c
+*.color1:       #E06C75
+*.color9:       #BE5046
 
 ! green
-*.color2:       #9c75dd
-*.color10:      #63b0b0
+*.color2:       #98C379
+*.color10:      #98C379
 
 ! yellow
-*.color3:       #9898ae
-*.color11:      #c0c0dd
+*.color3:       #E5C07B
+*.color11:      #D19A66
 
 ! blue
-*.color4:       #654a96
-*.color12:      #5786bc
+*.color4:       #61AFEF
+*.color12:      #61AFEF
 
 ! magenta
-*.color5:       #625566
-*.color13:      #3f3442
+*.color5:       #C678DD
+*.color13:      #C678DD
 
 ! cyan
-*.color6:       #a9d1df
-*.color14:      #849da2
+*.color6:       #56B6C2
+*.color14:      #56B6C2
 
 ! white
-*.color7:       #e6ebe5
-*.color15:      #d9d6cf
+*.color7:       #ABB2BF
+*.color15:      #5C6370
