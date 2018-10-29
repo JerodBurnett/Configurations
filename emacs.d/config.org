@@ -106,64 +106,57 @@
 *** anti-zenburn-theme
 #+BEGIN_SRC emacs-lisp
   (use-package anti-zenburn-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** Atom Theme
 #+BEGIN_SRC emacs-lisp
 (use-package atom-one-dark-theme
-   :defer t)
+   :ensure t)
 #+END_SRC
 *** Base16-theme
 #+BEGIN_SRC emacs-lisp
 (use-package base16-theme
-   :defer t)
-#+END_SRC
-*** cherry-blossom-theme
-#+BEGIN_SRC emacs-lisp
-  (use-package cherry-blossom-theme
-    :defer t)
+   :ensure t)
 #+END_SRC
 *** color-theme-modern
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-modern
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** flatui
 #+BEGIN_SRC emacs-lisp
   (use-package flatui-theme
-    :defer t)
-  (use-package flatui-dark-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** gotham-theme
 #+BEGIN_SRC emacs-lisp
   (use-package gotham-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
-*** kooten-theme
-#+BEGIN_SRC emacs-lisp
-  (use-package kooten-theme 
-    :defer t)
-#+END_SRC 
 *** oceanic-theme
 #+BEGIN_SRC emacs-lisp
   (use-package oceanic-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** organic-green-theme
 #+BEGIN_SRC emacs-lisp
   (use-package organic-green-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** Solarized-theme
 #+BEGIN_SRC emacs-lisp
 (use-package solarized-theme
-   :defer t)
+   :ensure t)
+#+END_SRC
+*** Spacemacs-theme
+#+BEGIN_SRC emacs-lisp
+  (use-package spacemacs-theme
+    :ensure t)
 #+END_SRC
 *** toxi-theme
 #+BEGIN_SRC emacs-lisp
   (use-package toxi-theme
-    :defer t)
+    :ensure t)
 #+END_SRC
 *** Theme Changing Functions
 #+BEGIN_SRC emacs-lisp
@@ -187,7 +180,7 @@
 ** Load-theme
 #+BEGIN_SRC emacs-lisp
 ;; (load-theme 'anti-zenburn t)
- (load-theme 'atom-one-dark t)
+ (load-theme 'spacemacs-dark t)
 #+END_SRC
 ** Modeline packages
 *** Smart-line-mode
@@ -515,6 +508,9 @@
 #+END_SRC
 * Programming/Languages
 ** LaTex / Markdown / Pandoc / etc
+#+BEGIN_SRC emacs-lisp
+(require 'ox-groff)
+#+END_SRC
 ** Other
 #+BEGIN_SRC emacs-lisp
   (use-package tex

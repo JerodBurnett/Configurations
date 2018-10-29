@@ -28,7 +28,7 @@
  '(linum-format (quote dynamic))
  '(package-selected-packages
    (quote
-    (helm-tramp org-pdfview pdf-tools beacon mark-multiple switch-window anti-zenburn-theme color-theme-modern flatui-theme flycheck company hungry-delete expand-region markdown-mode auctex org-bullets ace-window which-key cyberpunk-theme base16-theme use-package))))
+    (spacemacs-theme helm-tramp org-pdfview pdf-tools beacon mark-multiple switch-window anti-zenburn-theme color-theme-modern flatui-theme flycheck company hungry-delete expand-region markdown-mode auctex org-bullets ace-window which-key cyberpunk-theme base16-theme use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

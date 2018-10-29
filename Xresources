@@ -1,43 +1,64 @@
-! Font
-!URxvt.font:	xft:Hack:size=10:antialias=true
-URxvt.font:	xft:Iosevka Term:style=Regular:size=11:antialias=true
-!URxvt.font:	xft:Hasklug Nerd Font Mono:style=Regular:size=10:antialias=true
+!font 
+URxvt.font:	xft:GohuFont:style=Regular:size=10:antialias=true
 URxvt.scrollBar:	false
-!URxvt.background:	[70]#000000
+URxvt.depth:		32
+!URxvt.background	[70]#000000
 
-! special
-*.foreground:   #ABB2BF
-*.background:   #282C34
-*.cursorColor:  #ABB2BF
+! Colors
+*background:   #312e39
+*foreground:   #c0a79a
+*cursorColor:  #554757
 
-! black
-*.color0:       #282C34
-*.color8:       #3E4452
+*color0:      #33303b
+*color8:      #4f4b58
+*color1:      #87404f
+*color9:      #87404f
+*color2:      #4c9882
+*color10:     #4c9882
+*color3:      #71949a
+*color11:     #71949a
+*color4:      #615772
+*color12:     #615772
+*color5:      #783e57
+*color13:     #783e57
+*color6:      #554757
+*color14:     #554757
+*color7:      #c0a79a
+*color15:     #c0a79a
 
-! red
-*.color1:       #E06C75
-*.color9:       #BE5046
+! ! special
+! *.foreground:   #00bb00
+! *.background:   #001100
+! *.cursorColor:  #00bb00
 
-! green
-*.color2:       #98C379
-*.color10:      #98C379
+! ! black
+! *.color0:       #001100
+! *.color8:       #007700
 
-! yellow
-*.color3:       #E5C07B
-*.color11:      #D19A66
+! ! red
+! *.color1:       #007700
+! *.color9:       #007700
 
-! blue
-*.color4:       #61AFEF
-*.color12:      #61AFEF
+! ! green
+! *.color2:       #00bb00
+! *.color10:      #00bb00
 
-! magenta
-*.color5:       #C678DD
-*.color13:      #C678DD
+! ! yellow
+! *.color3:       #007700
+! *.color11:      #007700
 
-! cyan
-*.color6:       #56B6C2
-*.color14:      #56B6C2
+! ! blue
+! *.color4:       #009900
+! *.color12:      #009900
 
-! white
-*.color7:       #ABB2BF
-*.color15:      #5C6370
+! ! magenta
+! *.color5:       #00bb00
+! *.color13:      #00bb00
+
+! ! cyan
+! *.color6:       #005500
+! *.color14:      #005500
+
+! ! white
+! *.color7:       #00bb00
+! *.color15:      #00ff00
